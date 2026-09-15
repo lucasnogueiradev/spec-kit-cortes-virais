@@ -10,3 +10,4 @@
 - **AC-002**: O sistema deve extrair metadados (duração, título, autor).
 - **AC-003**: Deve salvar um `video.mp4` em até 1080p e um `audio.wav`.
 - **AC-004 (Resiliência)**: Se os arquivos MP4 e WAV já existirem fisicamente na pasta, a função **pula** o download do vídeo pesado (early return), extraindo apenas o JSON de metadados.
+- **AC-005 (Anti-Bloqueio)**: O sistema deve usar estratégias nativas para não ser bloqueado pelo YouTube (ex: fingir ser um celular Android). Adicionalmente, deve permitir a leitura opcional de um arquivo `cookies.txt` na raiz do projeto para autenticação avançada (evitando banimento de IPs em servidores de nuvem).
