@@ -13,3 +13,4 @@
 - **AC-005**: O payload da requisição de renderização (`RenderRequest`) deve permitir:
    - Um parâmetro `layout_type` (ex: `standard` ou `podcast_split`).
    - Um parâmetro `template_id` (ex: `impacto_vermelho`), que deve buscar a configuração visual dentro de um arquivo global `templates.json` localizado na raiz do projeto.
+   - Um parâmetro booleano `use_loop_effect` (padrão: `false`). Se ativado, o renderizador aplicará uma edição não-linear, colocando o final/gancho do vídeo também no começo.
