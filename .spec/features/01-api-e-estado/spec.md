@@ -11,6 +11,8 @@
 - **AC-003**: Deve existir um dicionário central persistido em um arquivo `jobs.json` (que armazene status, clips, progressos e a variável `last_analyzed_chunk_index`).
 - **AC-004**: Deve existir um endpoint `POST /resume/{job_id}` e um `POST /analyze/{job_id}/next_batch` para dar suporte futuro aos lotes e pausas.
 - **AC-005**: O payload da requisição de renderização (`RenderRequest`) deve permitir:
-   - Um parâmetro `layout_type` (ex: `standard` ou `podcast_split`).
+   - Um parâmetro `layout_type` (ex: `standard`, `podcast_split` ou `screenshot_reaction`).
+   - Um parâmetro opcional `screenshot_image_url` (caso o usuário escolha o layout de reaction, para colocar o print no topo).
    - Um parâmetro `template_id` (ex: `impacto_vermelho`), que deve buscar a configuração visual dentro de um arquivo global `templates.json` localizado na raiz do projeto.
    - Um parâmetro booleano `use_loop_effect` (padrão: `false`). Se ativado, o renderizador aplicará uma edição não-linear, colocando o final/gancho do vídeo também no começo.
+- **AC-006**: Deve existir um endpoint rápido `POST /preview` que recebe o mesmo payload do `RenderRequest`, mas em vez de processar um vídeo pesado de 1 minuto, extrai apenas 1 única foto (JPG) do vídeo com os balões, templates e print aplicados, retornando a imagem para o usuário validar o design antes de renderizar de verdade.

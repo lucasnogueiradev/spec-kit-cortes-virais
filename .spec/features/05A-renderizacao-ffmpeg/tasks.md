@@ -1,16 +1,18 @@
 # Tarefas de Desenvolvimento (T)
 
 - [ ] **T-001**: Criar o arquivo `services/video_renderer.py`.
-- [ ] **T-002**: Criar funções de ajuda `_seconds_to_ass_time(seconds)` e `_build_ass_content(words, duration)` para gerar o template de legendas `.ass`. A lógica do karaokê requer que o item atual `idx` tenha a tag de cor primária verde `{\c&H88FF00&}`.
-- [ ] **T-003**: Atualizar a assinatura para aceitar as configurações: `def render_clip(video_path, clip, title, output_dir, render_id, layout_type="standard", template_config: dict = None, use_loop_effect=False) -> Path:`
+- [ ] **T-002**: Criar funções de ajuda `_seconds_to_ass_time(seconds)` e `_build_ass_content(words, duration)` para gerar legendas `.ass` coloridas (ex: verde).
+- [ ] **T-003**: Atualizar a assinatura: `def render_clip(video_path, clip, title, output_dir, render_id, layout_type="standard", template_config: dict = None, use_loop_effect=False, screenshot_path=None) -> Path:`
 - [ ] **T-004**: **Lógica do Efeito de Loop (Edição Não-Linear)**: Se `use_loop_effect == True` e o clip possuir `hook_start`/`hook_end`:
-      - Em vez de um corte direto (linear), o `filter_complex` deve fatiar o vídeo original em duas partes usando `trim` e `atrim` (uma parte para o `hook`, outra para o vídeo principal `start:end`).
-      - Deve juntar as duas partes colocando o vídeo e áudio do `hook` na frente, usando o filtro `concat=n=2:v=1:a=1`. O resultado deve ser nomeado como `[base]`.
+      - Fatiar o vídeo original em duas partes usando `trim` e `atrim` e juntá-las usando `concat=n=2:v=1:a=1`. O resultado será chamado `[base]`.
       - Se `use_loop_effect == False`, faça o recorte linear tradicional `[0:v]...[base]`.
-- [ ] **T-005**: Lógica do Layout: Em cima da `[base]`, aplique o crop/scale do `layout_type` (se for `standard` usa `crop`, se for `podcast_split` divide em 2 e usa `vstack`). O output dessa etapa chamaremos de `[layout]`.
-- [ ] **T-006**: Lógica do Template (Balões e Títulos): O código Python deve olhar para `template_config`.
-      - Usar `enable='between(t,0,{duration})'` baseada no tempo do template.
-      - Se `type == "image"`: Usar o comando `overlay` no FFmpeg para a imagem.
-      - Se `type == "code_box"`: Usar `drawbox` para criar retângulo e `drawtext` para escrever o título em cima do `[layout]`.
+- [ ] **T-005**: Lógica do Layout: Em cima da `[base]`, aplique a organização visual:
+      - Se `standard`: `[base]scale=...,crop...[layout]`.
+      - Se `podcast_split`: Fatie a `[base]` em cima e embaixo, e faça `vstack`.
+      - Se `screenshot_reaction`: Adicione o arquivo da imagem como segundo input (`-i screenshot_path`). Escale a imagem para a metade de cima (1080x960), escale o vídeo `[base]` para a metade de baixo, e use `vstack` para colar os dois. O output será o `[layout]`.
+- [ ] **T-006**: Lógica do Template (Balões e Títulos): O código Python deve olhar para `template_config` (que conterá as posições e o tempo de exibição `duration_seconds`).
+      - Para fazer a "tarja vermelha no meio", o JSON de template já deve ter a posição Y próxima do meio da tela (ex: Y=900).
+      - Aplicar `drawbox` ou `overlay` em cima do `[layout]`.
 - [ ] **T-007**: Executar `subprocess.run(["ffmpeg", "-y", ...])`. Validar `returncode == 0`.
-- [ ] **T-008**: Voltar no `main.py` e implementar as lógicas no endpoint `/render`.
+- [ ] **T-008 (Geração de Preview)**: Criar uma função secundária `generate_preview_frame(...)`. Ela reaproveita toda a lógica do `filter_complex` acima, mas na hora de rodar o `ffmpeg`, ela deve pular pro meio do vídeo (ex: `-ss 10`), usar o argumento `-vframes 1` e exportar como um arquivo `.jpg`. Isso gera a imagem de teste instantaneamente sem processar os outros 1.799 frames.
+- [ ] **T-009**: Integrar as chamadas no endpoint `/render` e `/preview` no arquivo `main.py`.
