@@ -2,19 +2,16 @@
 
 ### Passo 1: Ajuste no Backend Python
 - [ ] **T-001**: O arquivo `services/video_renderer.py` deve ser refatorado para NÃO chamar o `subprocess` do `ffmpeg`. 
-- [ ] **T-002**: A função `render_clip` deve salvar um dicionário `{render_id}.json` dentro da pasta `outputs/`. Esse JSON deve conter: as `words`, `layout_type`, `screenshot_image_url`, as configurações de `template_config` e a flag `use_loop_effect`.
-- [ ] **T-003**: O backend deve retornar uma mensagem dizendo "JSON exportado com sucesso. Abra o Remotion para renderizar ou gerar o Preview".
+- [ ] **T-002**: A função `render_clip` deve salvar um dicionário `{render_id}.json` dentro da pasta `outputs/`. Esse JSON deve conter: as configurações de layout, `use_loop_effect`, e agora também `bg_music_url` e `bg_volume`.
+- [ ] **T-003**: Retornar sucesso.
 
 ### Passo 2: O Frontend Remotion
 - [ ] **T-004**: No terminal raiz, rodar o comando: `npx create-video@latest remotion-studio --template blank`.
 - [ ] **T-005**: Instalar pacotes necessários (ex: `npm install react`).
-- [ ] **T-006**: Criar Layouts Condicionais: Três componentes baseados no `layout_type`:
-      - `<StandardLayout />`: Tela inteira.
-      - `<PodcastSplitLayout />`: Flexbox com 2 recortes de vídeo.
-      - `<ScreenshotReactionLayout />`: Flexbox vertical. A metade superior será uma `<Img src={screenshot_image_url} />`, e a metade inferior será o componente de `<Sequence>` de vídeo.
-- [ ] **T-007**: **Lógica do Efeito de Loop**: Se o JSON apontar que `use_loop_effect === true`:
-      - Renderize um `<Sequence>` inicial com a duração do Hook, tocando a parte final do vídeo.
-      - Logo em seguida, renderize o segundo `<Sequence>`, tocando o resto do vídeo.
-- [ ] **T-008**: Criar o Componente `<Banner />` para a "Tarja vermelha no meio". Ele deve olhar para a propriedade `template_config` para ajustar a cor e posicioná-lo no meio da tela (`top: 50%`), controlando a aparição pelo `currentFrame`.
-- [ ] **T-009**: Criar a lógica de Legenda Karaokê com animação CSS, renderizando o texto em sincronia com as `words`.
-- [ ] **T-010 (Geração de Preview)**: Utilizar o comando CLI do Remotion `npx remotion still ...` passando as props do JSON para extrair um `.jpeg` estático de um frame central (ex: `--frame=300`). Isso atende ao endpoint `/preview` gerando uma foto sem gastar recursos pesados.
+- [ ] **T-006 (Trilha Sonora de Fundo)**:
+      - Se a propriedade `bg_music_url` estiver presente no JSON, renderizar o componente nativo do Remotion `<Audio src={bg_music_url} volume={bg_volume} loop />`. O Remotion cuidará de fazer a música tocar suavemente no fundo em repetição.
+- [ ] **T-007**: Criar Layouts Condicionais (`<StandardLayout />`, `<PodcastSplitLayout />`, `<ScreenshotReactionLayout />`).
+- [ ] **T-008 (Efeito Loop)**: Usar dois componentes `<Sequence>` alternando os tempos iniciais do vídeo.
+- [ ] **T-009**: Criar o Componente `<Banner />` para a Tarja baseada no template.
+- [ ] **T-010**: Criar a lógica de Legenda Karaokê com animação CSS.
+- [ ] **T-011**: Utilizar `npx remotion still` para o sistema de Preview Rápido.
