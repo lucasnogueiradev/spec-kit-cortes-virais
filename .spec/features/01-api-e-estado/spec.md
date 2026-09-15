@@ -10,4 +10,6 @@
 - **AC-002**: Uma chamada POST em `/analyze` deve retornar um `job_id` quase instantaneamente e colocar a tarefa pesada de análise para rodar no fundo.
 - **AC-003**: Deve existir um dicionário central persistido em um arquivo `jobs.json` (que armazene status, clips, progressos e a variável `last_analyzed_chunk_index`).
 - **AC-004**: Deve existir um endpoint `POST /resume/{job_id}` e um `POST /analyze/{job_id}/next_batch` para dar suporte futuro aos lotes e pausas.
-- **AC-005**: O payload da requisição de renderização (`RenderRequest`) deve permitir um parâmetro opcional chamado `layout_type` (ex: `standard` ou `podcast_split`), para dar flexibilidade ao editor final.
+- **AC-005**: O payload da requisição de renderização (`RenderRequest`) deve permitir:
+   - Um parâmetro `layout_type` (ex: `standard` ou `podcast_split`).
+   - Um parâmetro `template_id` (ex: `impacto_vermelho`), que deve buscar a configuração visual dentro de um arquivo global `templates.json` localizado na raiz do projeto.
